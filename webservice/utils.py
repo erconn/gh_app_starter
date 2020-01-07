@@ -19,9 +19,13 @@ def get_jwt():
     return bearer_token
 
 
-async def get_installation_access_token(gh, installation_id):
+async def get_installation_access_token(gh, installation_id, access_token_url):
     # doc: https://developer.github.com/v3/apps/#create-a-new-installation-token
-    access_token_url = f"/app/installations/{installation_id}/access_tokens"
+
+    # this ONLY works on github.com. Need to modify this to work with Enterprise
+    # events should return the access_tokens_url value, passing it in the function call.
+    #access_token_url = f"/app/installations/{installation_id}/access_tokens"
+
     jwt = get_jwt()
     response = await gh.post(
         access_token_url,
