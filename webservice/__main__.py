@@ -51,14 +51,25 @@ async def webhook(request):
 @router.register("installation", action="created")
 async def repo_installation_added(event, gh, *args, **kwargs):
     installation_id = event.data["installation"]["id"]
+    access_token_url = event.data["installation"]["access_tokens_url"]
     installation_access_token = await utils.get_installation_access_token(
-        gh, installation_id
+        gh, installation_id,access_token_url
     )
     maintainer = event.data["sender"]["login"]
     message = f"Thanks for installing me, @{maintainer}! (I'm a bot)."
 
+    # REALLY hackish way of getting the base URL. There's got to be something better.
+    # subtracting "/installation/repositories" from the end of the repositories_url in the event payload
+    # which usually looks something like https://server/api/v3/installation/repositories
+    # but on github.com it's api.github.com, hence this more hackish way of getting the base API URL
+    repositories_url = event.data["installation"]["repositories_url"]
+    base_url = repositories_url[:-26]
+
     for repository in event.data["repositories"]:
-        url = f"/repos/{repository['full_name']}/issues"
+        # The following only works on github.com, need to change the URL to work with Enterprise.
+        #url = f"/repos/{repository['full_name']}/issues"
+        issue_string = f"/repos/{repository['full_name']}/issues"
+        url = base_url+issue_string
         response = await gh.post(
             url,
             data={"title": "erconn's bot was installed", "body": message},
