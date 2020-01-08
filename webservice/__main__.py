@@ -58,31 +58,35 @@ async def repo_installation_added(event, gh, *args, **kwargs):
     maintainer = event.data["sender"]["login"]
     message = f"Thanks for installing me, @{maintainer}! (I'm a bot)."
 
-    #REALLY hackish way of getting the base URL. There's got to be something better.
-    #basically just subtracting "/installation/repositories" from the end of the repositories_url in the event payload
-    # which usually looks something like: "https://rtp-scm-github3.cisco.com/api/v3/installation/repositories"
+
+    # REALLY hackish way of getting the base URL. There's got to be something better.
+    # subtracting "/installation/repositories" from the end of the repositories_url in the event payload
+    # which usually looks something like https://server/api/v3/installation/repositories
+    # but on github.com it's api.github.com, hence this more hackish way of getting the base API URL
     repositories_url = event.data["installation"]["repositories_url"]
     base_url = repositories_url[:-26]
 
-    #key name has changed to "repositories", not "repositories_added".
     for repository in event.data["repositories"]:
-        #url = f"/repos/{repository['full_name']}/issues/" # This needs to be changed to whatever URL is in the response
-                                                           # as this format only works on github.com
-        issue_string = f"/repos/{repository['full_name']}/issues/"
+        # The following only works on github.com, need to change the URL to work with Enterprise.
+        #url = f"/repos/{repository['full_name']}/issues"
+        issue_string = f"/repos/{repository['full_name']}/issues"
         url = base_url+issue_string
-        print(f"Creating installation issue in repository {repository['full_name']}")
         response = await gh.post(
             url,
             data={"title": "erconn's bot was installed", "body": message},
             oauth_token=installation_access_token["token"],
         )
         issue_url = response["url"]
-        print(f"Closing issue {response['number']}")
-        await gh.patch(issue_url, data={"state": "closed"}, oauth_token=installation_access_token["token"])
-    #pass
+
+        await gh.patch(
+            issue_url,
+            data={"state": "closed"},
+            oauth_token=installation_access_token["token"],
+        )
 
 
-if __name__ == "__main__":  # pragma: no cover
+if __name__ == "__main__":
+
     app = web.Application()
 
     app.router.add_routes(routes)
