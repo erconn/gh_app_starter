@@ -77,7 +77,26 @@ async def repo_installation_added(event, gh, *args, **kwargs):
             oauth_token=installation_access_token["token"],
         )
 
+
 # When a pull request is made, run a syntax check on the CODEOWNERS file
+# https://help.github.com/en/github/creating-cloning-and-archiving-repositories/about-code-owners
+# single file permissions WOULD make the most sense for this except for the fact that
+# CODEOWNERS can exist in one of 3 locations.
+@router.register("pull_request", action="opened")
+async def pr_opened(event, gh, *args, **kwargs):
+    installation_id = event.data["installation"]["id"]
+    installation_access_token = await utils.get_installation_access_token(gh, installation_id)
+    api_url = os.getenv("GH_API_URL")
+    pr_url = event.data["pull_request"]["url"]
+    pr_branch = event.data["pull_request"]["head"]["ref"]
+    pr_repo = event.data["pull_request"]["head"]["repo"]["full_name"]
+    repo_path = f"/repos/{pr_repo}/"
+
+    # check for CODEOWNERS file in one of its 3 valid locations:
+    # repo/CODEOWNERS, docs/CODEOWNERS, or .github/CODEOWNERS
+    # use try/except blocks to get file contents in each location
+    #root_contents = await gh.getitem(api_url+repo_path)
+
 
 
 if __name__ == "__main__":
