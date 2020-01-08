@@ -61,7 +61,7 @@ async def repo_installation_added(event, gh, *args, **kwargs):
         url = f"/repos/{repository['full_name']}/issues"
         response = await gh.post(
             url,
-            data={"title": "Mariatta's bot was installed", "body": message},
+            data={"title": "erconn's bot was installed", "body": message},
             oauth_token=installation_access_token["token"],
         )
         issue_url = response["url"]
