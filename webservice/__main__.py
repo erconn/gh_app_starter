@@ -47,16 +47,17 @@ async def webhook(request):
         traceback.print_exc(file=sys.stderr)
         return web.Response(status=500)
 
-
+# Create and close an issue thanking the maintainer whenever the bot is installed on a repository
 @router.register("installation", action="created")
 async def repo_installation_added(event, gh, *args, **kwargs):
     installation_id = event.data["installation"]["id"]
     access_token_url = event.data["installation"]["access_tokens_url"]
     installation_access_token = await utils.get_installation_access_token(
-        gh, installation_id,access_token_url
+        gh,installation_id,access_token_url
     )
     maintainer = event.data["sender"]["login"]
     message = f"Thanks for installing me, @{maintainer}! (I'm a bot)."
+
 
     # REALLY hackish way of getting the base URL. There's got to be something better.
     # subtracting "/installation/repositories" from the end of the repositories_url in the event payload
@@ -76,6 +77,7 @@ async def repo_installation_added(event, gh, *args, **kwargs):
             oauth_token=installation_access_token["token"],
         )
         issue_url = response["url"]
+
         await gh.patch(
             issue_url,
             data={"state": "closed"},
@@ -84,6 +86,7 @@ async def repo_installation_added(event, gh, *args, **kwargs):
 
 
 if __name__ == "__main__":
+
     app = web.Application()
 
     app.router.add_routes(routes)

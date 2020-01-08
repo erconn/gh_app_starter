@@ -24,6 +24,7 @@ async def get_installation_access_token(gh, installation_id, access_token_url):
     # in its response payload, so we'll just pass that URL to the function.
     # doc: https://developer.github.com/v3/apps/#create-a-new-installation-token
     #access_token_url = f"/app/installations/{installation_id}/access_tokens"
+
     jwt = get_jwt()
     response = await gh.post(
         access_token_url,
