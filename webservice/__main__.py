@@ -91,12 +91,44 @@ async def pr_opened(event, gh, *args, **kwargs):
     pr_branch = event.data["pull_request"]["head"]["ref"]
     pr_repo = event.data["pull_request"]["head"]["repo"]["full_name"]
     repo_path = f"/repos/{pr_repo}/"
+    #need to add branch
 
     # check for CODEOWNERS file in one of its 3 valid locations:
     # repo/CODEOWNERS, docs/CODEOWNERS, or .github/CODEOWNERS
-    # use try/except blocks to get file contents in each location
-    #root_contents = await gh.getitem(api_url+repo_path)
 
+    codeowners_encoded = None
+    # repo root
+    try:
+        codeowners_url = api_url+repo_path
+        response = await gh.getitem(codeowners_url)
+        codeowners_encoded = response["content"]
+    except:
+        pass
+
+    # docs directory
+    try:
+        docs_path = "docs/"
+        codeowners_url = api_url+repo_path+docs_path
+        response = await gh.getitem(codeowners_url)
+        codeowners_encoded = response["content"]
+    except:
+        pass
+
+    # .github directory
+    try:
+        gh_config_path = ".github/"
+        codeowners_url = api_url+repo_path+gh_config_path
+        response = await gh.getitem(codeowners_url)
+        codeowners_encoded = response["content"]
+    except:
+        pass
+
+    # if we didn't find the CODEOWNERS file in any of the above locations, codeowners_encoded should
+    # still be None
+    if codeowners_encoded == None:
+        # block the pull request by setting mergeable_status
+    else:
+        # allow the pull request
 
 
 if __name__ == "__main__":
