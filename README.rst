@@ -10,7 +10,7 @@ webserver and install on an arbitrary GitHub Enterprise server.
 Webserver Setup
 ---------------
 
-|Python virtualenv|
+## Python virtualenv
 The webserver should run in a separate virtualenv for each GitHub
 Enterprise Server installation. Each virtualenv will need to have the
 following modules installed (``pip install modulename``):
@@ -23,7 +23,7 @@ following modules installed (``pip install modulename``):
 
 Alternatively, check the ``requirements.txt`` file in the repository.
 
-|Environment variables|
+## Environment variables
 
 The environment variables for setting up each GitHub Enterprise instance
 can be set in the bin/activate file in the Python virtualenv. 
