@@ -53,7 +53,7 @@ Heroku Setup
 |Deploy|
 
 .. |Deploy| image:: https://www.herokucdn.com/deploy/button.svg
-   :target: https://heroku.com/deploy?template=https://github.com/mariatta/gh_app_starter
+   :target: https://heroku.com/deploy?template=https://github.com/erconn/gh_app_starter
 
 
 Add the following config vars in Heroku.
