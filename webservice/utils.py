@@ -19,11 +19,11 @@ def get_jwt():
     return bearer_token
 
 
-async def get_installation_access_token(gh, installation_id, access_token_url):
-    # The following ref only works on github.com, but the API does provide a URL
-    # in its response payload, so we'll just pass that URL to the function.
+async def get_installation_access_token(gh, installation_id):
     # doc: https://developer.github.com/v3/apps/#create-a-new-installation-token
-    #access_token_url = f"/app/installations/{installation_id}/access_tokens"
+    access_token_path = f"/app/installations/{installation_id}/access_tokens"
+    api_url = os.getenv("GH_API_URL")
+    access_token_url = api_url + access_token_path
 
     jwt = get_jwt()
     response = await gh.post(
