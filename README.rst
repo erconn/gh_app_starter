@@ -51,18 +51,18 @@ Running the server
 
 Start the webservice by activating the virtualenv (``source /path/to/virtualenv/bin/activate``) and running
 
-```
-cd /path/to/gh_app_starter
-python -m webservice
-```
+::
+
+  cd /path/to/gh_app_starter
+  python -m webservice
 
 You should see this output:
 
-```
-(venv) [user@host] ~/dev/gh_app_starter$ python -m webservice
-======== Running on http://0.0.0.0:8080 ========
-(Press CTRL+C to quit)
-```
+::
+
+  (venv) [user@host] ~/dev/gh_app_starter$ python -m webservice
+  ======== Running on http://0.0.0.0:8080 ========
+  (Press CTRL+C to quit)
 
 Navigate to ``http://host:8080`` to verify that the webservice is accessible. You should see a page with the text
 
