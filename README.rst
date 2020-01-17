@@ -46,9 +46,32 @@ somereallylongtext
 -----END RSA PRIVATE KEY-----
 ```
 
+Running the server
+^^^^^^^^^^^^^^^^^^
+
+Start the webservice by activating the virtualenv (``source /path/to/virtualenv/bin/activate``) and running
+
+```
+cd /path/to/gh_app_starter
+python -m webservice
+```
+
+You should see this output:
+
+```
+(venv) [user@host] ~/dev/gh_app_starter$ python -m webservice
+======== Running on http://0.0.0.0:8080 ========
+(Press CTRL+C to quit)
+```
+
+Navigate to ``http://host:8080`` to verify that the webservice is accessible. You should see a page with the text
+
+"Hello world"
+
+You can now proceed to install the app on your GitHub Enterprise server.
+
 Heroku Setup
 ------------
-
 
 |Deploy|
 
@@ -56,7 +79,11 @@ Heroku Setup
    :target: https://heroku.com/deploy?template=https://github.com/erconn/gh_app_starter
 
 
-Add the following config vars in Heroku.
+Heroku automates the steps in the above webserver setup. You will only need to fill in the environment variables in the Heroku web interface:
+
+``GH_API_URL``: The base URL for API requests for your GitHub Enterprise
+server. Typically, this is something like ``https://servername/api/v3``,
+but for github.com it will be ``https://api.github.com``
 
 ``GH_SECRET``: The secret key from your GitHub App
 
